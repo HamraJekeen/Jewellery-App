@@ -32,7 +32,7 @@ import com.example.euphoria_colombo.R
 
 
 @Composable
-fun ProductItem(title: String,
+fun ProductItems(title: String,
                 price: String,
                 imageRes: Int,
                 onAddToCartClicked: () -> Unit,

@@ -1,5 +1,8 @@
 package com.example.euphoria_colombo.ui.screens
 
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
@@ -70,6 +73,7 @@ import com.example.euphoria_colombo.ui.ProductViewModel
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 
 import java.net.URL
@@ -85,9 +89,32 @@ fun ProductDetail(productName: String?,
 
     var quantity by remember { mutableStateOf(1) }
     // Use the passed product name to fetch the product directly
-    LaunchedEffect(productName) {
-        viewModel.fetchProductByTitle(productName ?: "")
+    var showProductNotFound by remember { mutableStateOf(false) }
+
+    // Use the passed product name to fetch the product directly
+    var noInternet by remember { mutableStateOf(false) }
+
+    // Check network connectivity
+    fun isInternetAvailable(): Boolean {
+        val connectivityManager =
+            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val activeNetwork = connectivityManager.activeNetwork
+        val networkCapabilities = connectivityManager.getNetworkCapabilities(activeNetwork)
+        return networkCapabilities?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) == true
     }
+
+    LaunchedEffect(productName) {
+        noInternet = !isInternetAvailable()
+        if (!noInternet) {
+            viewModel.fetchProductByTitle(productName ?: "")
+            showProductNotFound = false
+            delay(6000)
+            if (viewModel.searchedProduct.value == null) {
+                showProductNotFound = true
+            }
+        }
+    }
+
 
     val searchedProduct = viewModel.searchedProduct.value // Access searched product state
 
@@ -225,9 +252,39 @@ fun ProductDetail(productName: String?,
                 Text(text = stringResource(R.string.add_to_cart),
                     color = Color.White)
             }
-        } else {
-            Spacer(modifier = Modifier.height(16.dp))
-            Text("Product not found.")
+        }else if(!isInternetAvailable()){
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "No Internet Connection.",
+                    color = Color.Red,
+                    style = MaterialTheme.typography.titleMedium,
+                    textAlign = TextAlign.Center
+                )
+            }
+
+        }
+        else if(showProductNotFound){
+            Spacer(modifier = Modifier.height(36.dp))
+
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "Product not found.",
+                    color = Color.Black,
+                    style = MaterialTheme.typography.titleMedium,
+                    textAlign = TextAlign.Center
+                )
+            }
+            //Text("Product not found.")
         }
 
         Spacer(modifier = Modifier.height(16.dp))

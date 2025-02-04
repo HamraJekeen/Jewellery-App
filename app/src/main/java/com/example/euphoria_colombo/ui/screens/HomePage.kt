@@ -60,7 +60,7 @@ import com.example.euphoria_colombo.R
 import com.example.euphoria_colombo.Screen
 import com.example.euphoria_colombo.TopBar
 import com.example.euphoria_colombo.model.Datasource
-import com.example.euphoria_colombo.ui.component.ProductItem
+
 import com.example.euphoria_colombo.ui.theme.primaryContainerLightMediumContrast
 import com.example.euphoria_colombo.ui.theme.surfaceContainerLight
 import kotlinx.coroutines.delay
@@ -89,6 +89,7 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Close
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.euphoria_colombo.ui.CouponViewModel
+import com.example.euphoria_colombo.ui.component.ProductItems
 
 data class Review(
     val name: String,
@@ -575,7 +576,7 @@ fun TopSellingProducts(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 rowPictures.forEach { picture ->
-                    ProductItem(
+                    ProductItems(
                         title = stringResource(picture.titleResId),
                         price = stringResource(picture.priceResId),
                         imageRes = picture.imageResId,
@@ -648,7 +649,7 @@ fun TopSellingProductsLandscape(datasource: Datasource = Datasource(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 rowPictures.forEach { picture ->
-                    ProductItem(
+                    ProductItems(
                         title = stringResource(picture.titleResId),
                         price = stringResource(picture.priceResId),
                         imageRes = picture.imageResId,

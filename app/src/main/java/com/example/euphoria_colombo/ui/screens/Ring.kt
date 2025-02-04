@@ -52,7 +52,7 @@ import com.example.euphoria_colombo.data.ProductDataSource
 import com.example.euphoria_colombo.model.Datasource
 import com.example.euphoria_colombo.model.Product
 import com.example.euphoria_colombo.model.ProductResponse
-import com.example.euphoria_colombo.ui.component.ProductItem
+
 import com.example.euphoria_colombo.ui.theme.primaryContainerLightMediumContrast
 import retrofit2.Call
 import retrofit2.Callback
@@ -126,7 +126,9 @@ fun RingProducts(
                  navController: NavController
 ) {
     var products by remember { mutableStateOf<List<Product>>(emptyList()) }
-    var isLoading by remember { mutableStateOf(true) }
+    var isLoading by remember { mutableStateOf(false) }
+    var currentPage by remember { mutableStateOf(2) }
+    var hasMorePages by remember { mutableStateOf(true) }
     val context = LocalContext.current
     val productDataSource = ProductDataSource(context)
 
@@ -134,16 +136,23 @@ fun RingProducts(
     val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
     val activeNetwork = connectivityManager.activeNetworkInfo
 
-    if (activeNetwork != null && activeNetwork.isConnected) {
-        // Fetch products from API using ProductServiceBuilder
-        LaunchedEffect(Unit) {
-            ProductServiceBuilder.buildService(ProductApi::class.java).getProducts().enqueue(object : Callback<ProductResponse> {
+    // Function to load products
+    fun loadProducts(page: Int) {
+        if (isLoading) return
+
+        isLoading = true
+
+        if (activeNetwork != null && activeNetwork.isConnected) {
+            // Fetch products from API using ProductServiceBuilder
+            ProductServiceBuilder.buildService(ProductApi::class.java).getProducts(page).enqueue(object : Callback<ProductResponse> {
                 override fun onResponse(call: Call<ProductResponse>, response: Response<ProductResponse>) {
                     if (response.isSuccessful) {
-                        // Filter products to only include those in the "Chains" category
-                        products = response.body()?.data?.filter { product ->
+                        val newProducts = response.body()?.data?.filter { product ->
                             product.category.name.equals("Rings", ignoreCase = true)
                         } ?: emptyList()
+
+                        products = if (page == 1) newProducts else products + newProducts
+                        hasMorePages = response.body()?.links?.next != null
                     } else {
                         Toast.makeText(context, "Failed to load products", Toast.LENGTH_SHORT).show()
                     }
@@ -155,14 +164,19 @@ fun RingProducts(
                     isLoading = false
                 }
             })
+        } else {
+            // Load products from local JSON file using the new data source
+            products = productDataSource.loadProductsFromJsonRings()
+            isLoading = false
         }
-    } else {
-        // Load products from local JSON file using the new data source
-        products = productDataSource.loadProductsFromJsonRings()
-        isLoading = false
     }
 
-    if (isLoading) {
+    // Load initial products
+    LaunchedEffect(currentPage) {
+        loadProducts(currentPage)
+    }
+
+    if (isLoading && products.isEmpty()) {
         // Show loading indicator
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             Text(text = "Loading...", style = MaterialTheme.typography.bodyLarge)
@@ -239,6 +253,16 @@ fun RingProducts(
                     }
                     Spacer(modifier = Modifier.height(8.dp)) // Space between rows
                 }
+
+                // Load more products when reaching the end of the list
+                if (hasMorePages && !isLoading) {
+                    item {
+                        LaunchedEffect(Unit) {
+                            currentPage += 1
+                            loadProducts(currentPage)
+                        }
+                    }
+                }
             }
         }
     }
@@ -247,7 +271,9 @@ fun RingProducts(
 fun RingProductsLandscape(
                           navController: NavController) {
     var products by remember { mutableStateOf<List<Product>>(emptyList()) }
-    var isLoading by remember { mutableStateOf(true) }
+    var isLoading by remember { mutableStateOf(false) }
+    var currentPage by remember { mutableStateOf(2) }
+    var hasMorePages by remember { mutableStateOf(true) }
     val context = LocalContext.current
     val productDataSource = ProductDataSource(context)
 
@@ -255,16 +281,23 @@ fun RingProductsLandscape(
     val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
     val activeNetwork = connectivityManager.activeNetworkInfo
 
-    if (activeNetwork != null && activeNetwork.isConnected) {
-        // Fetch products from API using ProductServiceBuilder
-        LaunchedEffect(Unit) {
-            ProductServiceBuilder.buildService(ProductApi::class.java).getProducts().enqueue(object : Callback<ProductResponse> {
+    // Function to load products
+    fun loadProducts(page: Int) {
+        if (isLoading) return
+
+        isLoading = true
+
+        if (activeNetwork != null && activeNetwork.isConnected) {
+            // Fetch products from API using ProductServiceBuilder
+            ProductServiceBuilder.buildService(ProductApi::class.java).getProducts(page).enqueue(object : Callback<ProductResponse> {
                 override fun onResponse(call: Call<ProductResponse>, response: Response<ProductResponse>) {
                     if (response.isSuccessful) {
-                        // Filter products to only include those in the "Chains" category
-                        products = response.body()?.data?.filter { product ->
-                            product.category.name.equals("Rings", ignoreCase = true)
+                        val newProducts = response.body()?.data?.filter { product ->
+                            product.category.slug.equals("rings", ignoreCase = true)
                         } ?: emptyList()
+
+                        products = if (page == 1) newProducts else products + newProducts
+                        hasMorePages = response.body()?.links?.next != null
                     } else {
                         Toast.makeText(context, "Failed to load products", Toast.LENGTH_SHORT).show()
                     }
@@ -276,14 +309,19 @@ fun RingProductsLandscape(
                     isLoading = false
                 }
             })
+        } else {
+            // Load products from local JSON file using the new data source
+            products = productDataSource.loadProductsFromJsonRings()
+            isLoading = false
         }
-    } else {
-        // Load products from local JSON file using the new data source
-        products = productDataSource.loadProductsFromJsonRings()
-        isLoading = false
     }
 
-    if (isLoading) {
+    // Load initial products
+    LaunchedEffect(currentPage) {
+        loadProducts(currentPage)
+    }
+
+    if (isLoading && products.isEmpty()) {
         // Show loading indicator
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             Text(text = "Loading...", style = MaterialTheme.typography.bodyLarge)
@@ -360,9 +398,18 @@ fun RingProductsLandscape(
                     }
                     Spacer(modifier = Modifier.height(8.dp)) // Space between rows
                 }
+
+                // Load more products when reaching the end of the list
+                if (hasMorePages && !isLoading) {
+                    item {
+                        LaunchedEffect(Unit) {
+                            currentPage += 1
+                            loadProducts(currentPage)
+                        }
+                    }
+                }
             }
         }
     }
 }
-
 

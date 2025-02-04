@@ -55,7 +55,7 @@ import com.example.euphoria_colombo.data.ProductDataSource
 import com.example.euphoria_colombo.model.Datasource
 import com.example.euphoria_colombo.model.Product
 import com.example.euphoria_colombo.model.ProductResponse
-import com.example.euphoria_colombo.ui.component.ProductItem
+
 import com.example.euphoria_colombo.ui.theme.primaryContainerLightMediumContrast
 import retrofit2.Call
 import retrofit2.Callback
@@ -128,7 +128,9 @@ fun ChainProducts(
     navController: NavController
 ) {
     var products by remember { mutableStateOf<List<Product>>(emptyList()) }
-    var isLoading by remember { mutableStateOf(true) }
+    var isLoading by remember { mutableStateOf(false) }
+    var currentPage by remember { mutableStateOf(1) }
+    var hasMorePages by remember { mutableStateOf(true) }
     val context = LocalContext.current
     val productDataSource = ProductDataSource(context)
 
@@ -136,16 +138,24 @@ fun ChainProducts(
     val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
     val activeNetwork = connectivityManager.activeNetworkInfo
 
-    if (activeNetwork != null && activeNetwork.isConnected) {
-        // Fetch products from API using ProductServiceBuilder
-        LaunchedEffect(Unit) {
-            ProductServiceBuilder.buildService(ProductApi::class.java).getProducts().enqueue(object : Callback<ProductResponse> {
+    // Function to load products
+    fun loadProducts(page: Int) {
+        if (isLoading) return
+
+        isLoading = true
+
+        if (activeNetwork != null && activeNetwork.isConnected) {
+            // Fetch products from API using ProductServiceBuilder
+            ProductServiceBuilder.buildService(ProductApi::class.java).getProducts(page).enqueue(object : Callback<ProductResponse> {
                 override fun onResponse(call: Call<ProductResponse>, response: Response<ProductResponse>) {
                     if (response.isSuccessful) {
-                        // Filter products to only include those in the "Chains" category
-                        products = response.body()?.data?.filter { product ->
-                            product.category.name.equals("Chains", ignoreCase = true)
+                        val newProducts = response.body()?.data?.filter { product ->
+                            product.category.slug.equals("chains", ignoreCase = true)
                         } ?: emptyList()
+
+
+                        products = if (page == 1) newProducts else products + newProducts
+                        hasMorePages = response.body()?.links?.next != null
                     } else {
                         Toast.makeText(context, "Failed to load products", Toast.LENGTH_SHORT).show()
                     }
@@ -157,14 +167,19 @@ fun ChainProducts(
                     isLoading = false
                 }
             })
+        } else {
+            // Load products from local JSON file using the new data source
+            products = productDataSource.loadProductsFromJson()
+            isLoading = false
         }
-    } else {
-        // Load products from local JSON file using the new data source
-        products = productDataSource.loadProductsFromJson()
-        isLoading = false
     }
 
-    if (isLoading) {
+    // Load initial products
+    LaunchedEffect(currentPage) {
+        loadProducts(currentPage)
+    }
+
+    if (isLoading && products.isEmpty()) {
         // Show loading indicator
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             Text(text = "Loading...", style = MaterialTheme.typography.bodyLarge)
@@ -235,22 +250,34 @@ fun ChainProducts(
                                 },
                                 onImageClicked = {
                                     navController.navigate("productMaster/${product.name}")
-                                    //navController.navigate("productDetail/${product.name}/${product.price}/${product.image.first()}")
                                 }
                             )
                         }
                     }
                     Spacer(modifier = Modifier.height(8.dp)) // Space between rows
                 }
+
+                // Load more products when reaching the end of the list
+                if (hasMorePages && !isLoading) {
+                    item {
+                        LaunchedEffect(Unit) {
+                            currentPage + 1
+                            loadProducts(currentPage)
+                        }
+                    }
+                }
             }
         }
     }
 }
 
+
 @Composable
 fun ChainProductsLandscape(navController: NavController) {
     var products by remember { mutableStateOf<List<Product>>(emptyList()) }
-    var isLoading by remember { mutableStateOf(true) }
+    var isLoading by remember { mutableStateOf(false) }
+    var currentPage by remember { mutableStateOf(1) }
+    var hasMorePages by remember { mutableStateOf(true) }
     val context = LocalContext.current
     val productDataSource = ProductDataSource(context)
 
@@ -258,16 +285,23 @@ fun ChainProductsLandscape(navController: NavController) {
     val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
     val activeNetwork = connectivityManager.activeNetworkInfo
 
-    if (activeNetwork != null && activeNetwork.isConnected) {
-        // Fetch products from API using ProductServiceBuilder
-        LaunchedEffect(Unit) {
-            ProductServiceBuilder.buildService(ProductApi::class.java).getProducts().enqueue(object : Callback<ProductResponse> {
+    // Function to load products
+    fun loadProducts(page: Int) {
+        if (isLoading) return
+
+        isLoading = true
+
+        if (activeNetwork != null && activeNetwork.isConnected) {
+            // Fetch products from API using ProductServiceBuilder
+            ProductServiceBuilder.buildService(ProductApi::class.java).getProducts(page).enqueue(object : Callback<ProductResponse> {
                 override fun onResponse(call: Call<ProductResponse>, response: Response<ProductResponse>) {
                     if (response.isSuccessful) {
-                        // Filter products to only include those in the "Chains" category
-                        products = response.body()?.data?.filter { product ->
-                            product.category.name.equals("Chains", ignoreCase = true)
+                        val newProducts = response.body()?.data?.filter { product ->
+                            product.category.slug.equals("chains", ignoreCase = true)
                         } ?: emptyList()
+
+                        products = if (page == 1) newProducts else products + newProducts
+                        hasMorePages = response.body()?.links?.next != null
                     } else {
                         Toast.makeText(context, "Failed to load products", Toast.LENGTH_SHORT).show()
                     }
@@ -279,14 +313,19 @@ fun ChainProductsLandscape(navController: NavController) {
                     isLoading = false
                 }
             })
+        } else {
+            // Load products from local JSON file using the new data source
+            products = productDataSource.loadProductsFromJson()
+            isLoading = false
         }
-    } else {
-        // Load products from local JSON file using the new data source
-        products = productDataSource.loadProductsFromJson()
-        isLoading = false
     }
 
-    if (isLoading) {
+    // Load initial products
+    LaunchedEffect(currentPage) {
+        loadProducts(currentPage)
+    }
+
+    if (isLoading && products.isEmpty()) {
         // Show loading indicator
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             Text(text = "Loading...", style = MaterialTheme.typography.bodyLarge)
@@ -362,6 +401,16 @@ fun ChainProductsLandscape(navController: NavController) {
                         }
                     }
                     Spacer(modifier = Modifier.height(8.dp)) // Space between rows
+                }
+
+                // Load more products when reaching the end of the list
+                if (hasMorePages && !isLoading) {
+                    item {
+                        LaunchedEffect(Unit) {
+                            currentPage += 1
+                            loadProducts(currentPage)
+                        }
+                    }
                 }
             }
         }

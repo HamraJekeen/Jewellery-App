@@ -52,7 +52,7 @@ import com.example.euphoria_colombo.data.ProductDataSource
 import com.example.euphoria_colombo.model.Datasource
 import com.example.euphoria_colombo.model.Product
 import com.example.euphoria_colombo.model.ProductResponse
-import com.example.euphoria_colombo.ui.component.ProductItem
+
 import com.example.euphoria_colombo.ui.theme.primaryContainerLightMediumContrast
 import retrofit2.Call
 import retrofit2.Callback
@@ -123,7 +123,9 @@ fun EarringScreenLandscape(navController: NavController) {
 @Composable
 fun EarringProducts(navController: NavController) {
     var products by remember { mutableStateOf<List<Product>>(emptyList()) }
-    var isLoading by remember { mutableStateOf(true) }
+    var isLoading by remember { mutableStateOf(false) }
+    var currentPage by remember { mutableStateOf(3) }
+    var hasMorePages by remember { mutableStateOf(true) }
     val context = LocalContext.current
     val productDataSource = ProductDataSource(context)
 
@@ -131,16 +133,23 @@ fun EarringProducts(navController: NavController) {
     val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
     val activeNetwork = connectivityManager.activeNetworkInfo
 
-    if (activeNetwork != null && activeNetwork.isConnected) {
-        // Fetch products from API using ProductServiceBuilder
-        LaunchedEffect(Unit) {
-            ProductServiceBuilder.buildService(ProductApi::class.java).getProducts().enqueue(object : Callback<ProductResponse> {
+    // Function to load products
+    fun loadProducts(page: Int) {
+        if (isLoading) return
+
+        isLoading = true
+
+        if (activeNetwork != null && activeNetwork.isConnected) {
+            // Fetch products from API using ProductServiceBuilder
+            ProductServiceBuilder.buildService(ProductApi::class.java).getProducts(page).enqueue(object : Callback<ProductResponse> {
                 override fun onResponse(call: Call<ProductResponse>, response: Response<ProductResponse>) {
                     if (response.isSuccessful) {
-                        // Filter products to only include those in the "Chains" category
-                        products = response.body()?.data?.filter { product ->
-                            product.category.name.equals("Earrings", ignoreCase = true)
+                        val newProducts = response.body()?.data?.filter { product ->
+                            product.category.slug.equals("earrings", ignoreCase = true)
                         } ?: emptyList()
+
+                        products = if (page == 1) newProducts else products + newProducts
+                        hasMorePages = response.body()?.links?.next != null
                     } else {
                         Toast.makeText(context, "Failed to load products", Toast.LENGTH_SHORT).show()
                     }
@@ -152,14 +161,19 @@ fun EarringProducts(navController: NavController) {
                     isLoading = false
                 }
             })
+        } else {
+            // Load products from local JSON file using the new data source
+            products = productDataSource.loadProductsFromJsonEarrings()
+            isLoading = false
         }
-    } else {
-        // Load products from local JSON file using the new data source
-        products = productDataSource.loadProductsFromJsonEarrings()
-        isLoading = false
     }
 
-    if (isLoading) {
+    // Load initial products
+    LaunchedEffect(currentPage) {
+        loadProducts(currentPage)
+    }
+
+    if (isLoading && products.isEmpty()) {
         // Show loading indicator
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             Text(text = "Loading...", style = MaterialTheme.typography.bodyLarge)
@@ -236,6 +250,16 @@ fun EarringProducts(navController: NavController) {
                     }
                     Spacer(modifier = Modifier.height(8.dp)) // Space between rows
                 }
+
+                // Load more products when reaching the end of the list
+                if (hasMorePages && !isLoading) {
+                    item {
+                        LaunchedEffect(Unit) {
+                            currentPage += 1
+                            loadProducts(currentPage)
+                        }
+                    }
+                }
             }
         }
     }
@@ -243,7 +267,9 @@ fun EarringProducts(navController: NavController) {
 @Composable
 fun EarringProductsLandscape(navController: NavController) {
     var products by remember { mutableStateOf<List<Product>>(emptyList()) }
-    var isLoading by remember { mutableStateOf(true) }
+    var isLoading by remember { mutableStateOf(false) }
+    var currentPage by remember { mutableStateOf(3) }
+    var hasMorePages by remember { mutableStateOf(true) }
     val context = LocalContext.current
     val productDataSource = ProductDataSource(context)
 
@@ -251,16 +277,23 @@ fun EarringProductsLandscape(navController: NavController) {
     val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
     val activeNetwork = connectivityManager.activeNetworkInfo
 
-    if (activeNetwork != null && activeNetwork.isConnected) {
-        // Fetch products from API using ProductServiceBuilder
-        LaunchedEffect(Unit) {
-            ProductServiceBuilder.buildService(ProductApi::class.java).getProducts().enqueue(object : Callback<ProductResponse> {
+    // Function to load products
+    fun loadProducts(page: Int) {
+        if (isLoading) return
+
+        isLoading = true
+
+        if (activeNetwork != null && activeNetwork.isConnected) {
+            // Fetch products from API using ProductServiceBuilder
+            ProductServiceBuilder.buildService(ProductApi::class.java).getProducts(page).enqueue(object : Callback<ProductResponse> {
                 override fun onResponse(call: Call<ProductResponse>, response: Response<ProductResponse>) {
                     if (response.isSuccessful) {
-                        // Filter products to only include those in the "Chains" category
-                        products = response.body()?.data?.filter { product ->
-                            product.category.name.equals("Earrings", ignoreCase = true)
+                        val newProducts = response.body()?.data?.filter { product ->
+                            product.category.slug.equals("earrings", ignoreCase = true)
                         } ?: emptyList()
+
+                        products = if (page == 1) newProducts else products + newProducts
+                        hasMorePages = response.body()?.links?.next != null
                     } else {
                         Toast.makeText(context, "Failed to load products", Toast.LENGTH_SHORT).show()
                     }
@@ -272,14 +305,19 @@ fun EarringProductsLandscape(navController: NavController) {
                     isLoading = false
                 }
             })
+        } else {
+            // Load products from local JSON file using the new data source
+            products = productDataSource.loadProductsFromJsonEarrings()
+            isLoading = false
         }
-    } else {
-        // Load products from local JSON file using the new data source
-        products = productDataSource.loadProductsFromJsonEarrings()
-        isLoading = false
     }
 
-    if (isLoading) {
+    // Load initial products
+    LaunchedEffect(currentPage) {
+        loadProducts(currentPage)
+    }
+
+    if (isLoading && products.isEmpty()) {
         // Show loading indicator
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             Text(text = "Loading...", style = MaterialTheme.typography.bodyLarge)
@@ -355,6 +393,16 @@ fun EarringProductsLandscape(navController: NavController) {
                         }
                     }
                     Spacer(modifier = Modifier.height(8.dp)) // Space between rows
+                }
+
+                // Load more products when reaching the end of the list
+                if (hasMorePages && !isLoading) {
+                    item {
+                        LaunchedEffect(Unit) {
+                            currentPage += 1
+                            loadProducts(currentPage)
+                        }
+                    }
                 }
             }
         }
