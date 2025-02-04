@@ -5,7 +5,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import okhttp3.OkHttpClient
 
 object ProductServiceBuilder {
-    private const val BASE_URL = "http://10.0.2.2:8000/" // Update to your server's URL
+    private const val BASE_URL = "https://euphoriacolombo.xyz/" // Update to your server's URL
     private val okHttp = OkHttpClient.Builder() // Customize OkHttpClient if needed
 
     private val retrofit = Retrofit.Builder()
