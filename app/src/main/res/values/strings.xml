@@ -1,0 +1,173 @@
+<resources>
+    <string name="app_name">Euphoria_Colombo</string>
+    <string name="login">Login</string>
+    <string name="regNotYet">Not registered yet? </string>
+    <string name="CreateAccount">Sign up</string>
+
+
+
+
+    <string name="repeat_password">Repeat Password</string>
+    <string name="username">Username</string>
+    <string name="register">Register</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="regText">Already have an account?</string>
+    <string name="account_log_in">Log in</string>
+    <string name="search">Search</string>
+    <string name="shop_now">SHOP NOW</string>
+    <string name="be_spoilt_for_choice">Be spoilt for choice</string>
+    <string name="about_us">About Us</string>
+    <string name="learn">Learn bit more </string>
+    <string name="about">about us</string>
+    <string name="about_text_2">How it began and who we are now</string>
+    <string name="about_text_3">Euphoria started in 2015 with just a boxful of jewellery which was a combination of handmade and hand-picked pieces. It gradually expanded over the years to include an extensive range of jewellery and accessories for all ages and is now an online store with weekly open house days at our Colombo 05 office. It was a love of making jewellery and a love for animals that motivated the start up with the former enabling fund raising for the latter.
+Our products can be viewed online through our website, Instagram and Facebook. We don’t have a full-time store just yet but hopefully will have one in the future.
+We hope you enjoy and love our jewellery as much as we enjoy making and choosing them.  Thank you for your continued support and for all the love. </string>
+    <string name="top_selling_products">Top Selling Products</string>
+    <string name="shop_chain">Shop Chain</string>
+    <string name="ChainProducts">Shop Chains</string>
+    <string name="EarringProducts">Shop Earrings</string>
+    <string name="RingProducts">Shop Rings</string>
+
+
+
+    <string name="earring1_title">DAINTY STONE STUD EARRINGS</string>
+    <string name="earring1_price">LKR 890.00</string>
+
+    <string name="earring2_title">DIAMOND STONE STUD EARRING</string>
+    <string name="earring2_price">LKR 720.00</string>
+
+    <string name="earring3_title">HUGGIE HOOPS EARRINGS</string>
+    <string name="earring3_price">LKR 1890.00</string>
+
+    <string name="earring4_title">SAPHIRE CRISTRIAL STUD</string>
+    <string name="earring4_price">LKR 1990.00</string>
+
+    <string name="earring5_title">DAINTY HOOPS STUD EARRINGS</string>
+    <string name="earring5_price">LKR 1720.00</string>
+
+    <string name="earring6_title">DIAMOND STONE STUD EARRING</string>
+    <string name="earring6_price">LKR 2990.00</string>
+
+    <string name="earring7_title">GOLDEN HOOPS EARRINGS</string>
+    <string name="earring7_price">LKR 1690.00</string>
+
+    <string name="earring8_title">EMERALD GOLD STUD EARRING</string>
+    <string name="earring8_price">LKR 1480.00</string>
+
+
+
+
+
+
+
+    <string name="chain1_title">DAINTY LOVE STONE NECKLACE</string>
+    <string name="chain1_price">LKR 780.00</string>
+
+    <string name="chain2_title">ENCHANTED LOVE NECKLACE</string>
+    <string name="chain2_price">LKR 1410.00</string>
+
+    <string name="chain3_title">TEAR OF LOVE NECKLACE</string>
+    <string name="chain3_price">LKR 1500.00</string>
+
+    <string name="chain4_title">TEAR DROP NECKLACE</string>
+    <string name="chain4_price">LKR 1250.00</string>
+
+    <string name="chain5_title"> PEARL STONE NECKLACE</string>
+    <string name="chain5_price">LKR 1310.00</string>
+
+    <string name="chain6_title">WHITE LOVE NECKLACE</string>
+    <string name="chain6_price">LKR 1840.00</string>
+
+    <string name="chain7_title">SAPPHIRE STONE NECKLACE</string>
+    <string name="chain7_price">LKR 899.00</string>
+
+    <string name="chain8_title">FLORALED STUD INTERLOCK</string>
+    <string name="chain8_price">LKR 999.00</string>
+
+    <string name="chain9_title">RUBY STONE NECKLACE</string>
+    <string name="chain9_price">LKR 1110.00</string>
+
+    <string name="chain10_title">PEARL NECKLACE</string>
+    <string name="chain10_price">LKR 1710.00</string>
+
+    <string name="chain11_title">EMERALD STONE NECKLACE</string>
+    <string name="chain11_price">LKR 1530.00</string>
+
+    <string name="chain12_title">ANCIENT DROPED  NECKLACE</string>
+    <string name="chain12_price">LKR 1250.00</string>
+
+
+    <string name="ring1_title">GOLDEN LOVE INTERLOCK RING</string>
+    <string name="ring1_price">LKR 1450.00</string>
+
+    <string name="ring2_title">PLATINUMED PROMISED RING</string>
+    <string name="ring2_price">LKR 1990.00</string>
+
+    <string name="ring3_title">EMERALD GOLDEN INTERLOCK RING</string>
+    <string name="ring3_price">LKR 1490.00</string>
+
+    <string name="ring4_title">PLATINUM LOVE PROMISE RING</string>
+    <string name="ring4_price">LKR 1780.00</string>
+
+    <string name="ring5_title">FEATHER STONE ELEGANT RING</string>
+    <string name="ring5_price">LKR 1380.00</string>
+
+    <string name="ring6_title">PROPOSAL LOVE RING RING</string>
+    <string name="ring6_price">LKR 2100.00</string>
+
+    <string name="ring7_title">YOUR GIRL LOVE STONE RING</string>
+    <string name="ring7_price">LKR 2500.00</string>
+
+    <string name="ring8_title">TRUE LOVE PROMISED RING</string>
+    <string name="ring8_price">LKR 4000.00</string>
+
+
+
+    <string name="chains">Chains</string>
+    <string name="earrings">Earrings</string>
+    <string name="rings">Rings</string>
+
+    <string name="logo_image">Logo image</string>
+
+    <string name="shop_chains">SHOP CHAINS</string>
+    <string name="shop_rings">SHOP RINGS</string>
+    <string name="shop_earrings">SHOP EARRINGS</string>
+
+    <string name="about1">Image 1</string>
+    <string name="about_image_2">Image 2</string>
+    <string name="added_to_cart">Added to cart</string>
+    <string name="chainsdes">chains</string>
+    <string name="your_shopping_cart">Your Shopping Cart</string>
+    <string name="sub_total">LKR %.2f</string>
+    <string name="delivery">LKR 500.00</string>
+    <string name="remove_item">Remove Item</string>
+    <string name="subtotal">Subtotal</string>
+    <string name="delivery_name">Delivery</string>
+    <string name="total">TOTAL</string>
+    <string name="proceed_to_checkout">Proceed to checkout</string>
+    <string name="checkout">Checkout</string>
+    <string name="name">Name</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="street">Street</string>
+    <string name="city">City</string>
+    <string name="province">Province</string>
+    <string name="postal_code">Postal Code</string>
+    <string name="payment_method">Payment Method</string>
+    <string name="i_agree_to_the_terms_and_conditions">I agree to the terms and conditions</string>
+    <string name="proceed_to_payment">Proceed to Payment</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="product_details">Product Details</string>
+    <string name="product_description">This is a beautiful product with high-quality materials and craftsmanship.</string>
+    <string name="add_cart">Added to cart</string>
+    <string name="add_to_cart">Add To Cart</string>
+    <string name="home">Home</string>
+    <string name="categories">Categories</string>
+    <string name="cart">Cart</string>
+    <string name="account">Account</string>
+    <string name="cart_add">ADD TO CART</string>
+
+</resources>

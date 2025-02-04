@@ -1,0 +1,202 @@
+{
+  "chains": [
+    {
+      "id": "chain1",
+      "title": "DAINTY LOVE STONE NECKLACE",
+      "price": "LKR 780.00",
+      "image": "chain1"
+    },
+    {
+      "id": "chain2",
+      "title": "ENCHANTED LOVE NECKLACE",
+      "price": "LKR 1410.00",
+      "image": "chain2"
+    },
+    {
+      "id": "chain3",
+      "title": "TEAR OF LOVE NECKLACE",
+      "price": "LKR 1500.00",
+      "image": "chain3"
+    },
+    {
+      "id": "chain4",
+      "title": "TEAR DROP NECKLACE",
+      "price": "LKR 1250.00",
+      "image": "chain4"
+    },
+    {
+      "id": "chain5",
+      "title": "PEARL STONE NECKLACE",
+      "price": "LKR 1310.00",
+      "image": "chain5"
+    },
+    {
+      "id": "chain6",
+      "title": "WHITE LOVE NECKLACE",
+      "price": "LKR 1840.00",
+      "image": "chain7"
+    },
+    {
+      "id": "chain7",
+      "title": "SAPPHIRE STONE NECKLACE",
+      "price": "LKR 899.00",
+      "image": "chain6"
+    },
+    {
+      "id": "chain8",
+      "title": "FLORALED STUD INTERLOCK",
+      "price": "LKR 999.00",
+      "image": "chain8"
+    },
+    {
+      "id": "chain9",
+      "title": "RUBY STONE NECKLACE",
+      "price": "LKR 1110.00",
+      "image": "chain9"
+    },
+    {
+      "id": "chain10",
+      "title": "PEARL NECKLACE",
+      "price": "LKR 1710.00",
+      "image": "chain10"
+    },
+    {
+      "id": "chain11",
+      "title": "EMERALD STONE NECKLACE",
+      "price": "LKR 1530.00",
+      "image": "chain11"
+    },
+    {
+      "id": "chain12",
+      "title": "ANCIENT DROPED NECKLACE",
+      "price": "LKR 1250.00",
+      "image": "chain12"
+    }
+  ],
+  "rings": [
+    {
+      "id": "ring1",
+      "title": "GOLDEN LOVE INTERLOCK RING",
+      "price": "LKR 1450.00",
+      "image": "ring1"
+    },
+    {
+      "id": "ring2",
+      "title": "PLATINUMED PROMISED RING",
+      "price": "LKR 1990.00",
+      "image": "ring2"
+    },
+    {
+      "id": "ring3",
+      "title": "EMERALD GOLDEN INTERLOCK RING",
+      "price": "LKR 1490.00",
+      "image": "ring3"
+    },
+    {
+      "id": "ring4",
+      "title": "PLATINUM LOVE PROMISE RING",
+      "price": "LKR 1780.00",
+      "image": "ring4"
+    },
+    {
+      "id": "ring5",
+      "title": "FEATHER STONE ELEGANT RING",
+      "price": "LKR 1380.00",
+      "image": "ring5"
+    },
+    {
+      "id": "ring6",
+      "title": "PROPOSAL LOVE RING RING",
+      "price": "LKR 2100.00",
+      "image": "ring6"
+    },
+    {
+      "id": "ring7",
+      "title": "YOUR GIRL LOVE STONE RING",
+      "price": "LKR 2500.00",
+      "image": "ring7"
+    },
+    {
+      "id": "ring8",
+      "title": "TRUE LOVE PROMISED RING",
+      "price": "LKR 4000.00",
+      "image": "ring8"
+    }
+  ],
+  "earrings": [
+    {
+      "id": "earring1",
+      "title": "DAINTY STONE STUD EARRINGS",
+      "price": "LKR 890.00",
+      "image": "earring1"
+    },
+    {
+      "id": "earring2",
+      "title": "DIAMOND STONE STUD EARRING",
+      "price": "LKR 720.00",
+      "image": "earring2"
+    },
+    {
+      "id": "earring3",
+      "title": "HUGGIE HOOPS EARRINGS",
+      "price": "LKR 1890.00",
+      "image": "earring3"
+    },
+    {
+      "id": "earring4",
+      "title": "SAPHIRE CRISTRIAL STUD",
+      "price": "LKR 1990.00",
+      "image": "earring4"
+    },
+    {
+      "id": "earring5",
+      "title": "DAINTY HOOPS STUD EARRINGS",
+      "price": "LKR 1720.00",
+      "image": "earring5"
+    },
+    {
+      "id": "earring6",
+      "title": "DIAMOND STONE STUD EARRING",
+      "price": "LKR 2990.00",
+      "image": "earring6"
+    },
+    {
+      "id": "earring7",
+      "title": "GOLDEN HOOPS EARRINGS",
+      "price": "LKR 1690.00",
+      "image": "earring7"
+    },
+    {
+      "id": "earring8",
+      "title": "EMERALD GOLD STUD EARRING",
+      "price": "LKR 1480.00",
+      "image": "earring8"
+    }
+  ],
+  "topSelling": [
+    {
+      "id": "chain1",
+      "title": "DAINTY LOVE STONE NECKLACE",
+      "price": "LKR 780.00",
+      "image": "chain1"
+    },
+    {
+      "id": "earring1",
+      "title": "DAINTY STONE STUD EARRINGS",
+      "price": "LKR 890.00",
+      "image": "earring1"
+    },
+    {
+      "id": "earring2",
+      "title": "DIAMOND STONE STUD EARRING",
+      "price": "LKR 720.00",
+      "image": "earring2"
+    },
+    {
+      "id": "ring1",
+      "title": "GOLDEN LOVE INTERLOCK RING",
+      "price": "LKR 1450.00",
+      "image": "ring1"
+    }
+  ]
+}
