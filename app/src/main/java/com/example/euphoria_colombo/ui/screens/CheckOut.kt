@@ -121,8 +121,8 @@ fun CheckoutPage(navController: NavHostController) {
                         colors = outlinedTextFieldColors(unfocusedBorderColor = Color.Gray)
                     )
                     OutlinedTextField(
-                        value = name,
-                        onValueChange = { name = it },
+                        value = Lastname,
+                        onValueChange = { Lastname = it },
                         label = { Text(stringResource(R.string.last_name)) },
                         modifier = Modifier
                             .weight(1f)

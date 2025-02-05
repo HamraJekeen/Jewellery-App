@@ -66,22 +66,22 @@ fun ProductItems(title: String,
             style = MaterialTheme.typography.bodyMedium,
             textAlign = TextAlign.Center
         )
-        Text(
-            text = price,
-            style = MaterialTheme.typography.bodySmall,
-            color = Color.Gray,
-            textAlign = TextAlign.Center,
-            modifier = Modifier.fillMaxWidth()
-        )
+//        Text(
+//            text = price,
+//            style = MaterialTheme.typography.bodySmall,
+//            color = Color.Gray,
+//            textAlign = TextAlign.Center,
+//            modifier = Modifier.fillMaxWidth()
+//        )
         Spacer(modifier = Modifier.height(0.dp))
-        Button(
-            onClick = { onAddToCartClicked()
-                Toast.makeText(context, "Added to cart", Toast.LENGTH_SHORT).show() },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(stringResource(R.string.cart_add), style = MaterialTheme.typography.labelMedium)
-        //fontSize = 12.sp)
-        }
+//        Button(
+//            onClick = { onAddToCartClicked()
+//                Toast.makeText(context, "Added to cart", Toast.LENGTH_SHORT).show() },
+//            modifier = Modifier.fillMaxWidth()
+//        ) {
+//            Text(stringResource(R.string.cart_add), style = MaterialTheme.typography.labelMedium)
+//        //fontSize = 12.sp)
+//        }
     }
 }
 

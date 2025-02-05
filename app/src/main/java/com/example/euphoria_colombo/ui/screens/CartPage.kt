@@ -1,5 +1,6 @@
 package com.example.euphoria_colombo.ui.screens
 
+import CartViewModel
 import android.content.res.Configuration
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -30,6 +31,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -45,6 +47,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import coil.compose.rememberImagePainter
 import com.example.euphoria_colombo.BottomNavigationBar
 import com.example.euphoria_colombo.R
 import com.example.euphoria_colombo.Screen
@@ -52,22 +55,22 @@ import com.example.euphoria_colombo.TopBar
 
 
 @Composable
-fun CartScreen(navController: NavHostController) {
+fun CartScreen(navController: NavHostController,viewModel: CartViewModel) {
     val configuration = LocalConfiguration.current
 
     when (configuration.orientation) {
         Configuration.ORIENTATION_LANDSCAPE -> {
 
-            CartScreenLandscape(navController)
+            CartScreenLandscape(navController,viewModel)
         }
         else -> {
 
-            CartScreenPortrait(navController)
+            CartScreenPortrait(navController,viewModel)
         }
     }
 }
 @Composable
-fun CartScreenPortrait(navController: NavHostController) {
+fun CartScreenPortrait(navController: NavHostController,viewModel: CartViewModel) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -82,7 +85,7 @@ fun CartScreenPortrait(navController: NavHostController) {
                     .fillMaxWidth()
                     .verticalScroll(rememberScrollState())
             ) {
-                CartContent(navController)
+                CartContent(navController, viewModel)
 
             }
         }
@@ -90,7 +93,7 @@ fun CartScreenPortrait(navController: NavHostController) {
     }
 }
 @Composable
-fun CartScreenLandscape(navController: NavHostController) {
+fun CartScreenLandscape(navController: NavHostController,viewModel: CartViewModel) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -105,7 +108,7 @@ fun CartScreenLandscape(navController: NavHostController) {
                     .fillMaxWidth()
                     .verticalScroll(rememberScrollState())
             ) {
-                CartContent(navController)
+                CartContent(navController, viewModel)
 
             }
         }
@@ -115,82 +118,75 @@ fun CartScreenLandscape(navController: NavHostController) {
 }
 
 @Composable
-fun CartContent(navController: NavHostController) {
-    // State to manage the subtotal
-    var subtotal by remember { mutableStateOf(1500f) } // Initial subtotal
+fun CartContent(navController: NavHostController, viewModel: CartViewModel) {
+    val cartItems by viewModel.cartItems.collectAsState()
+
+    // Calculate subtotal by parsing the price from String to Double
+    val subtotal = cartItems.sumOf {
+        val priceAsDouble = it.product.price.toDoubleOrNull() ?: 0.0
+        priceAsDouble * it.quantity
+    }
 
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(0.dp)
     ) {
-
         Text(
             text = stringResource(R.string.your_shopping_cart),
-
             style = MaterialTheme.typography.headlineSmall,
             modifier = Modifier.padding(bottom = 26.dp, start = 30.dp)
         )
 
-
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .shadow(
-                    elevation = 12.dp,
-                    shape = RoundedCornerShape(0.dp)
-                )
+                .shadow(elevation = 12.dp, shape = RoundedCornerShape(0.dp))
                 .background(MaterialTheme.colorScheme.onPrimary)
                 .padding(0.dp)
         ) {
             Column {
-                // Cart items
-                CartItem(
-                    productName = stringResource(R.string.earring2_title),
-                    productPrice = stringResource(R.string.earring2_price),
-                    imageResource = R.drawable.earring2,
-                    onQuantityChange = { priceDifference ->
-                        subtotal += priceDifference // Update subtotal
-                    }
-                )
-                CartItem(
-                    productName = stringResource(R.string.chain1_title),
-                    productPrice = stringResource(R.string.chain1_price),
-                    imageResource = R.drawable.chain1,
-                    onQuantityChange = { priceDifference ->
-                        subtotal += priceDifference // Update subtotal
-                    }
-                )
+                cartItems.forEach { cartItem ->
+                    CartItem(
+                        productName = cartItem.product.name,
+                        productPrice = "LKR ${cartItem.product.price}",
+                        imageResource = cartItem.product.image.first(),
+                        quantity = cartItem.quantity,
+                        onQuantityChange = { newQuantity ->
+                            viewModel.updateQuantity(cartItem.product, newQuantity)
+                        },
+                        onRemoveItem = {
+                            viewModel.removeFromCart(cartItem.product)
+                        }
+                    )
+                }
             }
         }
 
         Spacer(modifier = Modifier.height(16.dp))
 
-
         CartTotals(
             subtotal = stringResource(R.string.sub_total).format(subtotal),
             delivery = stringResource(R.string.delivery),
             total = stringResource(R.string.sub_total).format(subtotal + 500f),
-            navController = navController// Delivery fee added to subtotal
+            navController = navController
         )
     }
 }
-
 @Composable
 fun CartItem(
     productName: String,
     productPrice: String,
-    imageResource: Int,
-    onQuantityChange: (Float) -> Unit
+    imageResource: String,
+    quantity: Int,
+    onQuantityChange: (Int) -> Unit,
+    onRemoveItem: () -> Unit
 ) {
-
-    val pricePerUnit = productPrice.removePrefix("LKR ").toFloat()
-
-
-    var quantity by remember { mutableStateOf(1) }
-
-
-    val totalPrice = pricePerUnit * quantity
+    val pricePerUnit = productPrice
+        .replace("LKR", "")
+        .replace(",", "")
+        .trim()
+        .toDoubleOrNull() ?: 0.0
 
     Row(
         modifier = Modifier
@@ -198,14 +194,13 @@ fun CartItem(
             .padding(vertical = 8.dp, horizontal = 12.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
-
     ) {
-        IconButton(onClick = { /* Remove item from cart */ }) {
+        IconButton(onClick = onRemoveItem) {
             Icon(Icons.Default.Close, contentDescription = stringResource(R.string.remove_item))
         }
 
         Image(
-            painter = painterResource(imageResource),
+            painter = rememberImagePainter(imageResource),
             contentDescription = productName,
             modifier = Modifier.size(65.dp)
         )
@@ -215,60 +210,41 @@ fun CartItem(
                 .weight(1f)
                 .padding(start = 4.dp)
         ) {
-            Text(text = productName,
-                style = MaterialTheme.typography.labelSmall,
-
-                )
-            Text(
-                text = productPrice,
-
-                style = MaterialTheme.typography.labelSmall,
-                color = Color.Gray
-            )
+            Text(text = productName, style = MaterialTheme.typography.labelSmall)
+            Text(text = "LKR $pricePerUnit", style = MaterialTheme.typography.labelSmall, color = Color.Gray)
         }
 
         Box(
             modifier = Modifier
-                .shadow(
-                    elevation = 12.dp,
-                    shape = RoundedCornerShape(0.dp)
-                )
+                .shadow(elevation = 12.dp, shape = RoundedCornerShape(0.dp))
                 .background(Color.White)
-
                 .padding(0.dp)
         ) {
             Row(
                 modifier = Modifier.padding(4.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                // Decrease quantity button
                 IconButton(onClick = {
                     if (quantity > 1) {
-                        quantity-- // Decrease quantity
-                        onQuantityChange(-pricePerUnit)
+                        onQuantityChange(quantity - 1)
                     }
                 }) {
                     Icon(Icons.Default.Remove, contentDescription = "Decrease Quantity", tint = MaterialTheme.colorScheme.scrim)
                 }
 
-                // Display current quantity
                 Text(text = "$quantity", color = MaterialTheme.colorScheme.scrim)
 
-                // Increase quantity button
                 IconButton(onClick = {
-                    quantity++ // Increase quantity
-                    onQuantityChange(pricePerUnit) // Increase subtotal
+                    onQuantityChange(quantity + 1)
                 }) {
-                    Icon(Icons.Default.Add, contentDescription = "Increase Quantity",tint = MaterialTheme.colorScheme.scrim)
+                    Icon(Icons.Default.Add, contentDescription = "Increase Quantity", tint = MaterialTheme.colorScheme.scrim)
                 }
             }
         }
     }
 }
-
 @Composable
-fun CartTotals(subtotal: String, delivery: String, total: String,navController: NavHostController) {
-
+fun CartTotals(subtotal: String, delivery: String, total: String, navController: NavHostController) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -276,27 +252,19 @@ fun CartTotals(subtotal: String, delivery: String, total: String,navController: 
         elevation = CardDefaults.cardElevation(8.dp),
         shape = RoundedCornerShape(8.dp)
     ) {
-
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(Color.White)
                 .padding(16.dp)
         ) {
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text(text = stringResource(R.string.subtotal),
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = Color.Gray)
-                Text(text = subtotal,
-//                    fontSize = 16.sp,
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = Color.Gray)
+                Text(text = stringResource(R.string.subtotal), style = MaterialTheme.typography.bodyLarge, color = Color.Gray)
+                Text(text = subtotal, style = MaterialTheme.typography.bodyLarge, color = Color.Gray)
             }
-
 
             Row(
                 modifier = Modifier
@@ -304,35 +272,22 @@ fun CartTotals(subtotal: String, delivery: String, total: String,navController: 
                     .padding(top = 8.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text(text = stringResource(R.string.delivery_name),
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = Color.Gray)
+                Text(text = stringResource(R.string.delivery_name), style = MaterialTheme.typography.bodyLarge, color = Color.Gray)
                 Text(text = delivery, fontSize = 16.sp, color = Color.Gray)
             }
 
-
             Spacer(modifier = Modifier.height(16.dp))
-
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text(
-                    text = stringResource(R.string.total),
-
-                    style = MaterialTheme.typography.titleMedium,
-                    color = Color.Black
-                )
-                Text(
-                    text = total,
-
-                    style = MaterialTheme.typography.titleMedium,
-                    color = Color.Black
-                )
+                Text(text = stringResource(R.string.total), style = MaterialTheme.typography.titleMedium, color = Color.Black)
+                Text(text = total, style = MaterialTheme.typography.titleMedium, color = Color.Black)
             }
+
             Button(
-                onClick = { navController.navigate(Screen.Checkout.route)},
+                onClick = { navController.navigate(Screen.Checkout.route) },
                 colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.surfaceContainer),
                 modifier = Modifier
                     .fillMaxWidth()

@@ -408,7 +408,10 @@ fun SignUpScreenContent(navController: NavHostController, authViewModel: AuthVie
                     // Password TextField
                     TextField(
                         value = password,
-                        onValueChange = { password = it },
+                        onValueChange = {
+                            password = it
+                            isPasswordValid = it.length >= 6 // Check if password length is >= 6
+                        },
                         label = { Text(stringResource(R.string.password)) },
                         visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                         trailingIcon = {
@@ -421,11 +424,22 @@ fun SignUpScreenContent(navController: NavHostController, authViewModel: AuthVie
                             .fillMaxWidth()
                             .padding(horizontal = 26.dp)
                             .background(MaterialTheme.colorScheme.surface),
+                        isError = !isPasswordValid, // Show error if password is invalid
                         colors = textFieldColors(
                             focusedIndicatorColor = MaterialTheme.colorScheme.primary,
-                            unfocusedIndicatorColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
-                        )
+                            unfocusedIndicatorColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f),
+                            errorIndicatorColor = MaterialTheme.colorScheme.error // Set error color
+                        ),
                     )
+
+                    if (!isPasswordValid) {
+                        Text(
+                            text = "Password must be at least 6 characters long",
+                            color = MaterialTheme.colorScheme.error,
+                            style = MaterialTheme.typography.bodySmall,
+                            modifier = Modifier.padding(start = 26.dp, top = 4.dp)
+                        )
+                    }
 
                     Spacer(modifier = Modifier.height(24.dp))
 

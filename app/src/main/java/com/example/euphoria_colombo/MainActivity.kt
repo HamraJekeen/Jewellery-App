@@ -5,6 +5,7 @@ package com.example.euphoria_colombo
 //import com.example.euphoria_colombo.ui.screens.CheckOutScreen
 //import com.example.euphoria_colombo.ui.screens.CheckoutPage
 
+import CartViewModel
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -109,6 +110,7 @@ import com.example.euphoria_colombo.ui.screens.ProductDetail
 
 class MainActivity : ComponentActivity() {
     private val authViewModel: AuthViewModel by viewModels()
+    private val cartViewModel: CartViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -131,7 +133,7 @@ class MainActivity : ComponentActivity() {
 
                 } else {
 
-                    MainScreen(navController, authViewModel = authViewModel)
+                    MainScreen(navController, authViewModel = authViewModel, cartViewModel)
                 }
 
 
@@ -158,7 +160,7 @@ enum class Screen(val route: String) {
 
 
 @Composable
-fun MainScreen(navController: NavHostController,authViewModel: AuthViewModel) {
+fun MainScreen(navController: NavHostController,authViewModel: AuthViewModel,cartViewModel: CartViewModel) {
     val currentBackStackEntry = navController.currentBackStackEntryAsState()
     val currentDestination = currentBackStackEntry.value?.destination?.route
 
@@ -201,11 +203,11 @@ fun MainScreen(navController: NavHostController,authViewModel: AuthViewModel) {
             }
         }
     ) { paddingValues ->
-        NavHostContainer(navController, Modifier.padding(paddingValues),authViewModel)
+        NavHostContainer(navController, Modifier.padding(paddingValues),authViewModel,cartViewModel)
     }
 }
 @Composable
-fun NavHostContainer(navController: NavHostController, modifier: Modifier = Modifier, authViewModel: AuthViewModel) {
+fun NavHostContainer(navController: NavHostController, modifier: Modifier = Modifier, authViewModel: AuthViewModel,cartViewModel: CartViewModel) {
     NavHost(
         navController = navController,
         startDestination = Screen.Account.route,
@@ -214,12 +216,12 @@ fun NavHostContainer(navController: NavHostController, modifier: Modifier = Modi
         composable(Screen.Home.route) { HomePage(navController) }
         composable(Screen.About.route) { AboutScreen(navController) }
         composable(Screen.Category.route) { CategoryScreen(navController) }
-        composable(Screen.Cart.route) { CartScreen(navController) }
+        composable(Screen.Cart.route) { CartScreen(navController,cartViewModel) }
         composable(Screen.Account.route) { LoginScreen(navController,authViewModel) }
         composable(Screen.Register.route) { SignUpScreen(navController,authViewModel) }
-        composable(Screen.Chains.route) { ChainsScreen(navController) }
-        composable(Screen.Earrings.route) { EarringsScreen(navController) }
-        composable(Screen.Rings.route) { RingsScreen(navController) }
+        composable(Screen.Chains.route) { ChainsScreen(navController,cartViewModel) }
+        composable(Screen.Earrings.route) { EarringsScreen(navController,cartViewModel) }
+        composable(Screen.Rings.route) { RingsScreen(navController,cartViewModel) }
         composable(
             Screen.ProductDetail.route,
             arguments = listOf(
@@ -285,6 +287,7 @@ fun NavHostContainer(navController: NavHostController, modifier: Modifier = Modi
             ProductDetail(
                 productName = productName,
                 viewModel = viewModel(),
+                cartViewModel = cartViewModel,
                 navController = navController,
                 onAddToCartClicked = {
                     // Handle add to cart logic here

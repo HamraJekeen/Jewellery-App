@@ -1,5 +1,6 @@
 package com.example.euphoria_colombo.ui.screens
 
+import CartViewModel
 import android.content.Context
 import android.content.res.Configuration
 import android.net.ConnectivityManager
@@ -62,23 +63,23 @@ import retrofit2.Response
 
 
 @Composable
-fun  RingsScreen(navController: NavController){
+fun  RingsScreen(navController: NavController,viewModel: CartViewModel){
     val configuration = LocalConfiguration.current
 
     when (configuration.orientation) {
         Configuration.ORIENTATION_LANDSCAPE -> {
             // Landscape layout
-            RingScreenLandscape(navController)
+            RingScreenLandscape(navController,viewModel)
         }
         else -> {
             // Portrait layout
-            RingScreenPortrait(navController)
+            RingScreenPortrait(navController,viewModel)
         }
     }
 }
 
 @Composable
-fun RingScreenPortrait(navController: NavController) {
+fun RingScreenPortrait(navController: NavController,viewModel: CartViewModel) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -92,14 +93,14 @@ fun RingScreenPortrait(navController: NavController) {
 
             ) {
 
-                RingProducts( navController = navController)
+                RingProducts( navController = navController,viewModel)
 
             }
         }
     }
 }
 @Composable
-fun RingScreenLandscape(navController: NavController) {
+fun RingScreenLandscape(navController: NavController,viewModel: CartViewModel) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -112,7 +113,7 @@ fun RingScreenLandscape(navController: NavController) {
 
             ) {
 
-                RingProductsLandscape( navController = navController)
+                RingProductsLandscape( navController = navController,viewModel)
 
 
             }
@@ -123,7 +124,8 @@ fun RingScreenLandscape(navController: NavController) {
 }
 @Composable
 fun RingProducts(
-                 navController: NavController
+                 navController: NavController,
+                 viewModel: CartViewModel
 ) {
     var products by remember { mutableStateOf<List<Product>>(emptyList()) }
     var isLoading by remember { mutableStateOf(false) }
@@ -244,6 +246,7 @@ fun RingProducts(
                                 imageRes = product.image.first(), // Assuming you have a way to convert URL to resource
                                 onAddToCartClicked = {
                                     // Handle add to cart
+                                    viewModel.addToCart(product)
                                 },
                                 onImageClicked = {
                                     navController.navigate("productMaster/${product.name}")
@@ -269,7 +272,8 @@ fun RingProducts(
 }
 @Composable
 fun RingProductsLandscape(
-                          navController: NavController) {
+                          navController: NavController,
+                          viewModel: CartViewModel) {
     var products by remember { mutableStateOf<List<Product>>(emptyList()) }
     var isLoading by remember { mutableStateOf(false) }
     var currentPage by remember { mutableStateOf(2) }
@@ -389,6 +393,7 @@ fun RingProductsLandscape(
                                 imageRes = product.image.first(), // Assuming you have a way to convert URL to resource
                                 onAddToCartClicked = {
                                     // Handle add to cart
+                                    viewModel.addToCart(product)
                                 },
                                 onImageClicked = {
                                     navController.navigate("productMaster/${product.name}")

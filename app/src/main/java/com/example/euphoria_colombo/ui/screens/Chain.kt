@@ -1,5 +1,6 @@
 package com.example.euphoria_colombo.ui.screens
 
+import CartViewModel
 import android.content.Context
 import android.content.res.Configuration
 import android.net.ConnectivityManager
@@ -63,23 +64,23 @@ import retrofit2.Response
 
 
 @Composable
-fun  ChainsScreen(navController: NavController){
+fun  ChainsScreen(navController: NavController,viewModel: CartViewModel){
     val configuration = LocalConfiguration.current
 
     when (configuration.orientation) {
         Configuration.ORIENTATION_LANDSCAPE -> {
             // Landscape layout
-            ChainScreenLandscape(navController)
+            ChainScreenLandscape(navController,viewModel)
         }
         else -> {
             // Portrait layout
-            ChainScreenPortrait(navController)
+            ChainScreenPortrait(navController,viewModel)
         }
     }
 }
 
 @Composable
-fun ChainScreenPortrait(navController: NavController) {
+fun ChainScreenPortrait(navController: NavController,viewModel: CartViewModel) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -93,7 +94,7 @@ fun ChainScreenPortrait(navController: NavController) {
 
             ) {
 
-                ChainProducts(navController = navController)
+                ChainProducts(navController = navController,viewModel)
 
 
             }
@@ -101,7 +102,7 @@ fun ChainScreenPortrait(navController: NavController) {
     }
 }
 @Composable
-fun ChainScreenLandscape(navController: NavController) {
+fun ChainScreenLandscape(navController: NavController,viewModel: CartViewModel) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -114,7 +115,7 @@ fun ChainScreenLandscape(navController: NavController) {
 
             ) {
 
-                ChainProductsLandscape( navController = navController)
+                ChainProductsLandscape( navController = navController,viewModel)
 
 
             }
@@ -125,7 +126,8 @@ fun ChainScreenLandscape(navController: NavController) {
 }
 @Composable
 fun ChainProducts(
-    navController: NavController
+    navController: NavController,
+    viewModel: CartViewModel
 ) {
     var products by remember { mutableStateOf<List<Product>>(emptyList()) }
     var isLoading by remember { mutableStateOf(false) }
@@ -247,6 +249,7 @@ fun ChainProducts(
                                 imageRes = product.image.first(), // Assuming you have a way to convert URL to resource
                                 onAddToCartClicked = {
                                     // Handle add to cart
+                                    viewModel.addToCart(product)
                                 },
                                 onImageClicked = {
                                     navController.navigate("productMaster/${product.name}")
@@ -273,7 +276,8 @@ fun ChainProducts(
 
 
 @Composable
-fun ChainProductsLandscape(navController: NavController) {
+fun ChainProductsLandscape(navController: NavController,
+                           viewModel: CartViewModel) {
     var products by remember { mutableStateOf<List<Product>>(emptyList()) }
     var isLoading by remember { mutableStateOf(false) }
     var currentPage by remember { mutableStateOf(1) }
@@ -393,6 +397,7 @@ fun ChainProductsLandscape(navController: NavController) {
                                 imageRes = product.image.first(), // Assuming you have a way to convert URL to resource
                                 onAddToCartClicked = {
                                     // Handle add to cart
+                                    viewModel.addToCart(product)
                                 },
                                 onImageClicked = {
                                     navController.navigate("productMaster/${product.name}")

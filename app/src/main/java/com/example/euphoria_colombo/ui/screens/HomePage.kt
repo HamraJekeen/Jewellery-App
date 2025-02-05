@@ -171,7 +171,7 @@ fun HomeScreenPortrait(navController: NavHostController) {
                 CategorySection(navController)
                 AboutUsSection(navController)
                 AboutUsTwoImagesSection()
-                TopSellingProducts(datasource = Datasource(), navController = navController)
+                //TopSellingProducts(datasource = Datasource(), navController = navController)
                 ReviewSection(navController)
             }
         }
@@ -195,7 +195,7 @@ fun HomeScreenLandscape(navController: NavHostController) {
                 Iconlist()
                 CategorySection(navController)
                 AboutUsCombinedSection(navController)
-                TopSellingProductsLandscape(datasource = Datasource(), navController = navController)
+                //TopSellingProductsLandscape(datasource = Datasource(), navController = navController)
                 ReviewSection(navController)
             }
         }
@@ -519,156 +519,156 @@ fun AboutUsSection(navController: NavHostController) {
     }
 }
 
-@Composable
-fun TopSellingProducts(
-    datasource: Datasource = Datasource(),
-    navController: NavController
-) {
-    val pictures = datasource.Topselling()
-
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(0.dp)
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 8.dp),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            // Left line
-            Box(
-                modifier = Modifier
-                    .width(100.dp)
-                    .padding(start = 40.dp)
-                    .height(3.dp)
-                    .background(MaterialTheme.colorScheme.surfaceDim) // Brown color line
-            )
-
-            // Text in the center
-            Text(
-                text = stringResource(R.string.top_selling_products),
-
-                style = MaterialTheme.typography.titleMedium,
-                textAlign = TextAlign.Center,
-                modifier = Modifier
-                    .padding(horizontal = 8.dp)
-                    .wrapContentWidth()
-            )
-
-            // Right line
-            Box(
-                modifier = Modifier
-                    .width(100.dp)
-                    .padding(end = 40.dp)
-                    .height(3.dp)
-                    .background(MaterialTheme.colorScheme.surfaceDim)
-                // Brown color line
-            )
-        }
-
-        // Display products in rows
-        pictures.chunked(2).forEach { rowPictures ->
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                rowPictures.forEach { picture ->
-                    ProductItems(
-                        title = stringResource(picture.titleResId),
-                        price = stringResource(picture.priceResId),
-                        imageRes = picture.imageResId,
-                        onAddToCartClicked = {
-                            //
-                        },
-                        onImageClicked = {
-                            // Navigate to product detail screen when image is clicked
-                            navController.navigate("productDetail/${picture.titleResId}/${picture.priceResId}/${picture.imageResId}")
-
-
-                        }
-                    )
-                }
-            }
-        }
-    }
-}
-@Composable
-fun TopSellingProductsLandscape(datasource: Datasource = Datasource(),
-                                navController: NavController) {
-    val pictures = datasource.Topselling()
-
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(0.dp)
-    ) {Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(bottom = 8.dp),
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        // Left line
-        Box(
-            modifier = Modifier
-                .width(100.dp)
-                .padding(start = 40.dp)
-                .height(3.dp)
-                .background(MaterialTheme.colorScheme.surfaceDim)
-        )
-
-        // Text in the center
-        Text(
-            text = stringResource(R.string.top_selling_products),
-
-            style = MaterialTheme.typography.titleMedium,
-            textAlign = TextAlign.Center,
-            modifier = Modifier
-                .padding(horizontal = 8.dp)
-                .wrapContentWidth()
-        )
-
-        // Right line
-        Box(
-            modifier = Modifier
-                .width(100.dp)
-                .padding(end = 40.dp)
-                .height(3.dp)
-                .background(MaterialTheme.colorScheme.surfaceDim)
-            // Brown color line
-        )
-    }
-
-        // Display products in rows
-        pictures.chunked(4).forEach { rowPictures ->
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                rowPictures.forEach { picture ->
-                    ProductItems(
-                        title = stringResource(picture.titleResId),
-                        price = stringResource(picture.priceResId),
-                        imageRes = picture.imageResId,
-                        onAddToCartClicked = {
-                            // Handle Add to Cart action
-
-                        },
-                        onImageClicked = {
-                            // Navigate to product detail screen when image is clicked
-                            navController.navigate("productDetail/${picture.titleResId}/${picture.priceResId}/${picture.imageResId}")
-
-
-                        }
-                    )
-                }
-            }
-        }
-    }
-}
+//@Composable
+//fun TopSellingProducts(
+//    datasource: Datasource = Datasource(),
+//    navController: NavController
+//) {
+//    val pictures = datasource.Topselling()
+//
+//    Column(
+//        modifier = Modifier
+//            .fillMaxWidth()
+//            .padding(0.dp)
+//    ) {
+//        Row(
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .padding(bottom = 8.dp),
+//            horizontalArrangement = Arrangement.Center,
+//            verticalAlignment = Alignment.CenterVertically
+//        ) {
+//            // Left line
+//            Box(
+//                modifier = Modifier
+//                    .width(100.dp)
+//                    .padding(start = 40.dp)
+//                    .height(3.dp)
+//                    .background(MaterialTheme.colorScheme.surfaceDim) // Brown color line
+//            )
+//
+//            // Text in the center
+//            Text(
+//                text = stringResource(R.string.top_selling_products),
+//
+//                style = MaterialTheme.typography.titleMedium,
+//                textAlign = TextAlign.Center,
+//                modifier = Modifier
+//                    .padding(horizontal = 8.dp)
+//                    .wrapContentWidth()
+//            )
+//
+//            // Right line
+//            Box(
+//                modifier = Modifier
+//                    .width(100.dp)
+//                    .padding(end = 40.dp)
+//                    .height(3.dp)
+//                    .background(MaterialTheme.colorScheme.surfaceDim)
+//                // Brown color line
+//            )
+//        }
+//
+//        // Display products in rows
+//        pictures.chunked(2).forEach { rowPictures ->
+//            Row(
+//                modifier = Modifier.fillMaxWidth(),
+//                horizontalArrangement = Arrangement.SpaceBetween
+//            ) {
+//                rowPictures.forEach { picture ->
+//                    ProductItems(
+//                        title = stringResource(picture.titleResId),
+//                        price = stringResource(picture.priceResId),
+//                        imageRes = picture.imageResId,
+//                        onAddToCartClicked = {
+//                            //
+//                        },
+//                        onImageClicked = {
+//                            // Navigate to product detail screen when image is clicked
+//                            //navController.navigate("productDetail/${picture.titleResId}/${picture.priceResId}/${picture.imageResId}")
+//
+//
+//                        }
+//                    )
+//                }
+//            }
+//        }
+//    }
+//}
+//@Composable
+//fun TopSellingProductsLandscape(datasource: Datasource = Datasource(),
+//                                navController: NavController) {
+//    val pictures = datasource.Topselling()
+//
+//    Column(
+//        modifier = Modifier
+//            .fillMaxWidth()
+//            .padding(0.dp)
+//    ) {Row(
+//        modifier = Modifier
+//            .fillMaxWidth()
+//            .padding(bottom = 8.dp),
+//        horizontalArrangement = Arrangement.Center,
+//        verticalAlignment = Alignment.CenterVertically
+//    ) {
+//        // Left line
+//        Box(
+//            modifier = Modifier
+//                .width(100.dp)
+//                .padding(start = 40.dp)
+//                .height(3.dp)
+//                .background(MaterialTheme.colorScheme.surfaceDim)
+//        )
+//
+//        // Text in the center
+//        Text(
+//            text = stringResource(R.string.top_selling_products),
+//
+//            style = MaterialTheme.typography.titleMedium,
+//            textAlign = TextAlign.Center,
+//            modifier = Modifier
+//                .padding(horizontal = 8.dp)
+//                .wrapContentWidth()
+//        )
+//
+//        // Right line
+//        Box(
+//            modifier = Modifier
+//                .width(100.dp)
+//                .padding(end = 40.dp)
+//                .height(3.dp)
+//                .background(MaterialTheme.colorScheme.surfaceDim)
+//            // Brown color line
+//        )
+//    }
+//
+//        // Display products in rows
+//        pictures.chunked(4).forEach { rowPictures ->
+//            Row(
+//                modifier = Modifier.fillMaxWidth(),
+//                horizontalArrangement = Arrangement.SpaceBetween
+//            ) {
+//                rowPictures.forEach { picture ->
+//                    ProductItems(
+//                        title = stringResource(picture.titleResId),
+//                        price = stringResource(picture.priceResId),
+//                        imageRes = picture.imageResId,
+//                        onAddToCartClicked = {
+//                            // Handle Add to Cart action
+//
+//                        },
+//                        onImageClicked = {
+//                            // Navigate to product detail screen when image is clicked
+//                            //navController.navigate("productDetail/${picture.titleResId}/${picture.priceResId}/${picture.imageResId}")
+//
+//
+//                        }
+//                    )
+//                }
+//            }
+//        }
+//    }
+//}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -963,7 +963,7 @@ fun ReviewCard(
                         imageVector = Icons.Filled.Star,
                         contentDescription = null,
                         modifier = Modifier.size(16.dp),
-                        tint = MaterialTheme.colorScheme.primary
+                        tint = MaterialTheme.colorScheme.surfaceContainer
                     )
                 }
             }

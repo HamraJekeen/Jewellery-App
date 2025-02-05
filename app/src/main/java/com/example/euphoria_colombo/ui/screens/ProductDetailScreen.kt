@@ -1,5 +1,6 @@
 package com.example.euphoria_colombo.ui.screens
 
+import CartViewModel
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
@@ -68,6 +69,7 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.euphoria_colombo.R
+import com.example.euphoria_colombo.model.Category
 //import com.example.euphoria_colombo.api.RetrofitInstance.ProductDetailApi
 import com.example.euphoria_colombo.ui.ProductViewModel
 import com.google.gson.Gson
@@ -84,7 +86,8 @@ fun ProductDetail(productName: String?,
                         viewModel: ProductViewModel,
                         navController: NavController,
                         onAddToCartClicked: () -> Unit,
-                        ) {
+                  cartViewModel: CartViewModel
+) {
     val context = LocalContext.current
 
     var quantity by remember { mutableStateOf(1) }
@@ -240,17 +243,22 @@ fun ProductDetail(productName: String?,
             }
             Button(
                 onClick = {
-                    onAddToCartClicked()
-                    Toast.makeText(context, context.getString(R.string.add_cart), Toast.LENGTH_SHORT).show() },
+                    if (searchedProduct != null) {
+                        val product = searchedProduct.toProduct() // Convert to Product
+                        cartViewModel.addToCart(product, quantity) // Add to cart
+                        Toast.makeText(context, context.getString(R.string.add_cart), Toast.LENGTH_SHORT).show()
+                    }
+                },
                 shape = RectangleShape,
-
                 colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.surfaceContainer),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp)
             ) {
-                Text(text = stringResource(R.string.add_to_cart),
-                    color = Color.White)
+                Text(
+                    text = stringResource(R.string.add_to_cart),
+                    color = Color.White
+                )
             }
         }else if(!isInternetAvailable()){
             Box(
@@ -292,6 +300,32 @@ fun ProductDetail(productName: String?,
 
     }
 }
+fun ProductDetail.toProduct(): Product {
+    return Product(
+        id = this.id,
+        name = this.title, // Mapping title to name
+        slug = "", // Assign a default value if `ProductDetail` doesn't have it
+        image = listOf(this.image), // Convert single image URL to a list
+        description = this.description,
+        price = this.price,
+        is_active = 1, // Defaulting to active (adjust as needed)
+        is_featured = 0, // Default value
+        in_stock = 1, // Default value (adjust according to logic)
+        on_sale = 0, // Default value (change if necessary)
+        category = Category( // Provide a default category if `ProductDetail` lacks it
+            id = 0,
+            name = "Default Category",
+            slug = "default-category",
+            image = "",
+            is_active = 1,
+            created_at = "",
+            updated_at = ""
+        ),
+        created_at = "", // Assign a default timestamp
+        updated_at = ""  // Assign a default timestamp
+    )
+}
+
 
 
 

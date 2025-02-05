@@ -1,5 +1,6 @@
 package com.example.euphoria_colombo.ui.screens
 
+import CartViewModel
 import android.content.Context
 import android.content.res.Configuration
 import android.net.ConnectivityManager
@@ -60,23 +61,23 @@ import retrofit2.Response
 
 
 @Composable
-fun  EarringsScreen(navController: NavController){
+fun  EarringsScreen(navController: NavController,viewModel: CartViewModel){
     val configuration = LocalConfiguration.current
 
     when (configuration.orientation) {
         Configuration.ORIENTATION_LANDSCAPE -> {
             // Landscape layout
-            EarringScreenLandscape(navController)
+            EarringScreenLandscape(navController, viewModel)
         }
         else -> {
             // Portrait layout
-            EarringScreenPortrait(navController)
+            EarringScreenPortrait(navController, viewModel)
         }
     }
 }
 
 @Composable
-fun EarringScreenPortrait(navController: NavController) {
+fun EarringScreenPortrait(navController: NavController,viewModel: CartViewModel) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -90,7 +91,7 @@ fun EarringScreenPortrait(navController: NavController) {
 
             ) {
 
-                EarringProducts( navController = navController)
+                EarringProducts( navController = navController, viewModel)
 
 
             }
@@ -98,7 +99,7 @@ fun EarringScreenPortrait(navController: NavController) {
     }
 }
 @Composable
-fun EarringScreenLandscape(navController: NavController) {
+fun EarringScreenLandscape(navController: NavController,viewModel: CartViewModel) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -111,7 +112,7 @@ fun EarringScreenLandscape(navController: NavController) {
 
             ) {
 
-                EarringProductsLandscape( navController = navController)
+                EarringProductsLandscape( navController = navController, viewModel)
 
 
             }
@@ -121,7 +122,7 @@ fun EarringScreenLandscape(navController: NavController) {
     }
 }
 @Composable
-fun EarringProducts(navController: NavController) {
+fun EarringProducts(navController: NavController,viewModel: CartViewModel) {
     var products by remember { mutableStateOf<List<Product>>(emptyList()) }
     var isLoading by remember { mutableStateOf(false) }
     var currentPage by remember { mutableStateOf(3) }
@@ -241,6 +242,7 @@ fun EarringProducts(navController: NavController) {
                                 imageRes = product.image.first(), // Assuming you have a way to convert URL to resource
                                 onAddToCartClicked = {
                                     // Handle add to cart
+                                    viewModel.addToCart(product)
                                 },
                                 onImageClicked = {
                                     navController.navigate("productMaster/${product.name}")
@@ -265,7 +267,7 @@ fun EarringProducts(navController: NavController) {
     }
 }
 @Composable
-fun EarringProductsLandscape(navController: NavController) {
+fun EarringProductsLandscape(navController: NavController,viewModel: CartViewModel) {
     var products by remember { mutableStateOf<List<Product>>(emptyList()) }
     var isLoading by remember { mutableStateOf(false) }
     var currentPage by remember { mutableStateOf(3) }
@@ -385,6 +387,7 @@ fun EarringProductsLandscape(navController: NavController) {
                                 imageRes = product.image.first(), // Assuming you have a way to convert URL to resource
                                 onAddToCartClicked = {
                                     // Handle add to cart
+                                    viewModel.addToCart(product)
                                 },
                                 onImageClicked = {
                                     navController.navigate("productMaster/${product.name}")
