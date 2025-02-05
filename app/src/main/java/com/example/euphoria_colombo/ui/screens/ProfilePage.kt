@@ -99,7 +99,9 @@ fun UserProfileScreen(navController: NavHostController, authViewModel: AuthViewM
         modifier = Modifier
             .fillMaxSize()
             .padding(0.dp)
+            .verticalScroll(rememberScrollState())
             .background(MaterialTheme.colorScheme.onPrimary),
+
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {

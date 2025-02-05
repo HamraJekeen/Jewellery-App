@@ -718,7 +718,7 @@ fun ReviewSection(navController: NavHostController) {
                     },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = MaterialTheme.colorScheme.primaryContainer,
-                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                        contentColor = MaterialTheme.colorScheme.onBackground
                     ),
                     shape = RoundedCornerShape(8.dp)
                 ) {
